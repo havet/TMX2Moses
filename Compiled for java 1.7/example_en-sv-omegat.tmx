@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tmx SYSTEM "tmx11.dtd">
+<tmx version="1.1">
+  <header creationtool="OmegaT" o-tmf="OmegaT TMX" adminlang="EN-US" datatype="plaintext" creationtoolversion="3.1.7" segtype="sentence" srclang="EN"/>
+  <body>
+<!-- Default translations -->
+    <tu>
+      <tuv lang="EN">
+        <seg>A competent translator is not only bilingual but bicultural.</seg>
+      </tuv>
+      <tuv lang="SV" changeid="Per" changedate="20141205T150922Z" creationid="Per" creationdate="20141205T150922Z">
+        <seg>En duktig översättare är inte bara tvåspråkig utan behärskar också två kulturer.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN">
+        <seg>A language is not merely a collection of words and of rules of grammar and syntax for generating sentences, but also a vast interconnecting system of connotations and cultural references whose mastery, writes linguist Mario Pei, "comes close to being a lifetime job."</seg>
+      </tuv>
+      <tuv lang="SV" changeid="Per" changedate="20141205T154119Z" creationid="Per" creationdate="20141205T151557Z">
+        <seg>Ett språk är inte bara en samling ord med regler för grammatik och syntax för att skapa meningar, utan också ett omfattande system av konnotationer och kulturella referenser som är förbundna med varandra, vilket enligt lingvisten Mario Pei, "nästan innebär ett livstidsarbete" för att det ska gå att tillfullo behärska.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN">
+        <seg>Source: Wikipedia (en) 2014-12-05</seg>
+      </tuv>
+      <tuv lang="SV" changeid="Per" changedate="20141205T154956Z" creationid="Per" creationdate="20141205T154956Z">
+        <seg>Källa: Wikipedia (en) 2014-12-05</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN">
+        <seg>The complexity of the translator's task cannot be overstated; one author suggests that becoming an accomplished translator — after having already acquired a good basic knowledge of both languages and cultures — may require a minimum of ten years' experience.</seg>
+      </tuv>
+      <tuv lang="SV" changeid="Per" changedate="20141205T154203Z" creationid="Per" creationdate="20141205T151947Z">
+        <seg>Komplexiteten i en översättares uppgift kan inte överdrivas; en författare anser att för att bli en fulländad översättare — efter att redan ha införskaffat en god grundläggande kunskap om båda språken och kulturerna — kan det krävas minst tio års erfarenhet.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN">
+        <seg>The translator's role in relation to a text has been compared to that of an artist, e.g., a musician or actor, who interprets a work of art.</seg>
+      </tuv>
+      <tuv lang="SV" changeid="Per" changedate="20141205T153650Z" creationid="Per" creationdate="20141205T153502Z">
+        <seg>En översättares roll i förhållande till en text har jämförts med en artists, t.ex. en musikers eller en skådespelares, som tolkar ett konstverk.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN">
+        <seg>Translation, like other arts, inescapably involves choice, and choice implies interpretation.</seg>
+      </tuv>
+      <tuv lang="SV" changeid="Per" changedate="20141205T153812Z" creationid="Per" creationdate="20141205T153812Z">
+        <seg>I likhet med annan konst, innefattar översättning oundvikligen val, och val förutsätter tolkning.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN">
+        <seg>Viewed in this light, it is a serious misconception to assume that a person who has fair fluency in two languages will, by virtue of that fact alone, be consistently competent to translate between them.</seg>
+      </tuv>
+      <tuv lang="SV" changeid="Per" changedate="20141205T154303Z" creationid="Per" creationdate="20141205T154303Z">
+        <seg>I ljuset av detta, är det en allvarlig missuppfattning att anta att en person som behärskar två språk hyggligt flytande, enbart på grund av detta skulle vara entydigt kompetent att översätta mellan dem.</seg>
+      </tuv>
+    </tu>
+<!-- Alternative translations -->
+  </body>
+</tmx>

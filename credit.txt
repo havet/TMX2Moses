@@ -1,0 +1,8 @@
+Credit
+======
+
+The example TMX-file is my translation from English to Swedish of a quote from 
+the article on translation in Wikipedia. The original text might have been 
+changed since it was downloaded and translated.
+
+Source: https://en.wikipedia.org/wiki/Translation
