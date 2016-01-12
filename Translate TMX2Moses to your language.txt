@@ -1,0 +1,13 @@
+Translation
+-----------
+Would you like to translate the program to your language? Translate the file MessagesBundleTMX2Moses.properties.
+
+You should save it with the appropriate language and country codes, like "_fr_FR" for french, France (if you translate 
+into French from France). Like this: MessagesBundleTMX2Moses_fr_FR.properties
+
+Add the language code and country code as parameters when you run the program:
+java -jar TMX2Moses.jar fr FR
+
+(Language code according to ISO 639-1 and country code according to ISO 3166-1 alpha-2:
+https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
