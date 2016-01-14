@@ -126,7 +126,7 @@ class TMX2Moses
 	//------------------------
 	int max = files.size();
 	System.out.println();
-	Utskrift.skrivText("Antal filer i " + cat + " : " + max);
+	Utskrift.skrivText(messages.getString("fileno") + " " + cat + " : " + max);
 	
 	System.exit(1);
 	}
