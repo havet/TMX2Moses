@@ -9,7 +9,7 @@
 // http://www.statmt.org/moses/
 // ====================================== 
 
-// Version: 0.4
+// Version: 0.5
 
 //      Copyright (c) 2013-2015 Per Tunedal, Stockholm, Sweden
 //       Author: Per Tunedal <info@tunedal.nu>
@@ -39,6 +39,8 @@
 //        at the line.
 
 // v. 0.4 Check of input improved.
+
+// v. 0.5 Option: process all tmx-files in a folder.
 
 // -----------------------------------------------------------------------
 
@@ -83,18 +85,52 @@ class TMX2Moses
 		messages = ResourceBundle.getBundle("MessagesBundleTMX2Moses", currentLocale);
 	
 	String tmxfil = "";
+	boolean file=false;
+	boolean directory=false;
+	String allowed = "";
+	String answer = "";
 	
 	// Kolla att filen finns.
-	while (tmxfil.length()==0 || !Textfil.exists(tmxfil))
+	while (tmxfil.length()==0 || (file==false && directory==false))
 		{
 		Utskrift.rubrik(messages.getString("writepath"));
 		tmxfil = Inmatning.rad(messages.getString("tmx"));
-		if(!Textfil.exists(tmxfil))
+		file=Textfil.exists(tmxfil);
+		if(file==false)
 			{
 				Utskrift.skrivText(messages.getString("doesntexist"));
+				if(Textfil.directoryExists(tmxfil)) directory=true;
+			}
+			
+		if (directory==true)
+			{
+				Utskrift.skrivText(messages.getString("directory"));
+				// regex ^$ betyder tom sträng
+				allowed = messages.getString("yesno"); // Tillåtna svar
+				answer = Inmatning.rad(messages.getString("usedir"), allowed);	
+				if (!answer.matches(messages.getString("yes"))) directory = false;
 			}
 		}
 		
+	if (directory == true)
+	{
+	String cat = tmxfil;
+	tmxfil = "";
+	
+	// Filerna i katalogen listas
+	// ==========================
+	ArrayList<String> files = new ArrayList<String>();
+	files = listFiles(cat);
+	
+	// Antal filer i katalogen
+	//------------------------
+	int max = files.size();
+	System.out.println();
+	Utskrift.skrivText("Antal filer i " + cat + " : " + max);
+	
+	System.exit(1);
+	}
+	
 	// Läs språkparet ur TMX-filen
 	// ===========================
 	String rad = "";
@@ -403,5 +439,24 @@ class TMX2Moses
 	Utskrift.skrivText(messages.getString("writtento"));
 	Utskrift.skrivText(utfil1);
 	Utskrift.skrivText(utfil2);
+	}
+	
+	 // List all the files in a directory
+	public static ArrayList<String> listFiles(String directoryName)
+	{
+		ArrayList<String> files = new ArrayList<String>();
+		File directory = new File(directoryName);
+ 
+		//get all the files from a directory
+		File[] fList = directory.listFiles();
+ 
+		for (File file : fList)
+		{
+			if (file.isFile())
+			{
+				files.add(file.getName());
+			}
+		}
+		return files;
 	}
 }
