@@ -158,7 +158,7 @@ class TMX2Moses
 		ArrayList<String> files = new ArrayList<String>();
 		File directory = new File(directoryName);
  
-		//get all the files from a directory
+		//get all the filenames from a directory
 		File[] fList = directory.listFiles();
  
 		for (File file : fList)
@@ -180,8 +180,7 @@ class TMX2Moses
 		BufferedReader br = new BufferedReader(new InputStreamReader(new
 		FileInputStream(tmxfil), "UTF-8"));
 
-		//for(int i = 0;i < 5; i++)
-		//while ((rad = br0.readLine()) != null)
+		// Reads a few lines to check the file type
 		while ((rad = br.readLine()) != null && i<5)
 		{
 			if (rad.contains("<!DOCTYPE tmx"))
