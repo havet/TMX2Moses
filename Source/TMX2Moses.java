@@ -140,13 +140,47 @@ class TMX2Moses
 				filnamn = files.get(i);
 				System.out.println();
 				Utskrift.skrivText(i + ": " + filnamn);
-				TMX2bitext(filnamn, language, country);
+				// Kolla att det är en TMX-fil
+				//boolean checkTMX(String tmxfil)
+				if (!checkTMX(filnamn))
+				{
+					Utskrift.skrivText(messages.getString("notmx"));
+					continue;
+				}
+				
+				// Writes to bitext files
+				// ======================
+				// Läs språkparet ur TMX-filen
+				// ===========================
+				String[] v = new String [2];
+				TMXlanguages(filnamn, v);
+				//TMX2bitext(String tmxfil, String[] v, String language, String country)
+				TMX2bitext(filnamn, v, language, country);
 			}
 	}
 	
-	// Writes to bitext files
-	// ======================
-	else TMX2bitext(tmxfil, language, country);
+	else
+	{
+		// Kolla att det är en TMX-fil
+		//boolean checkTMX(String tmxfil)
+		if (!checkTMX(tmxfil))
+		{
+			Utskrift.skrivText(messages.getString("notmx"));
+			System.exit(1);
+		}
+		// Writes to bitext files
+		// ======================
+		else
+		{
+			// Läs språkparet ur TMX-filen
+			// ===========================
+			String[] v = new String [2];
+			TMXlanguages(tmxfil, v);
+			
+			//TMX2bitext(String tmxfil, String[] v, String language, String country) 
+			TMX2bitext(tmxfil, v, language, country);
+		}
+	}
 	
 	// KLART
 	Utskrift.rubrik(messages.getString("finished"));
@@ -198,7 +232,7 @@ class TMX2Moses
 	}
 	
 	// Read a TMX-file and write to bitext files.
-	public static void TMX2bitext(String tmxfil, String language, String country) throws Exception
+	public static void TMX2bitext(String tmxfil, String[] v, String language, String country) throws Exception
 	{
 	
 		Locale currentLocale;
@@ -207,274 +241,259 @@ class TMX2Moses
 		currentLocale = new Locale(language, country);
 
 		messages = ResourceBundle.getBundle("MessagesBundleTMX2Moses", currentLocale);
-	
-		// Kolla att det är en TMX-fil
-		//boolean checkTMX(String tmxfil)
-		if (!checkTMX(tmxfil))
+		
+		// Läs språkparet ur TMX-filen
+		// ===========================
+		//String[] v = new String [2];
+		//TMXlanguages(tmxfil, v);
+		
+		String lang1 = v[0];
+		String lang2 = v[1];
+		
+		// Opens TMX-file for reading
+		BufferedReader br0 = new BufferedReader(new InputStreamReader(new
+		FileInputStream(tmxfil), "UTF-8"));
+		
+		String rad = "";
+		boolean segStart = true; // Raden börjar med meningen.
+		
+		// Läser några rader för att bestämma hur raderna med meningarna ser ut.
+		// =====================================================================
+		while ((rad = br0.readLine()) != null)
 		{
-			Utskrift.skrivText(messages.getString("notmx"));
-			//System.exit(1);
+			rad = rad.trim();
+			
+			//Utskrift.skrivText("Index för text på raden: " + rad.indexOf("<seg>"));
+			
+			// söker början på textraden
+			if (rad.indexOf("<seg>") == 0)
+			{
+				segStart = true;
+				break;
+			}
+			
+			else if (rad.indexOf("<seg>") > 0)
+			{
+				segStart = false;
+				break;
+			}
 		}
 		
-		else
+		br0.close(); // stänger filen
 		
+		//Utskrift.skrivText("Raden börjar med texten: " + segStart);
+		
+		Utskrift.skrivText(messages.getString("languages") + " " + lang1 + " " + messages.getString("and") + " " + lang2);
+		
+		// Läs sökvägen ur TMX-filnamn m sökväg.
+		String path = Textfil.readPath(tmxfil);
+		
+		//Utskrift.skrivText("Path: " + path);
+		
+		// Läs själva filnamnet på TMX-filen.
+		String filnamnet = Textfil.readFileName(tmxfil);
+		
+		//Utskrift.skrivText(messages.getString("tmxpres") + " " + filnamnet);
+		
+		// Ta bort ändelsen .tmx
+		String filstam = filnamnet.substring(0, filnamnet.length() - 4);
+		//Utskrift.skrivText(filstam);
+		
+		// Konstruera utfilerna.
+		
+		String utfil1 = path + filstam + "." + lang1;
+		String utfil2 = path + filstam + "." + lang2;
+		
+		//Utskrift.rubrik("Resultatfiler");
+		//Utskrift.skrivText(utfil1);
+		//Utskrift.skrivText(utfil2);
+		
+		Textfil.skrivText(utfil1, "", "UTF-8"); // rensning
+		Textfil.skrivText(utfil2, "", "UTF-8"); // rensning
+		
+		// Opens TMX-file for reading
+		BufferedReader br1 = new BufferedReader(new InputStreamReader(new
+		FileInputStream(tmxfil), "UTF-8"));
+		
+		int chunkSize = 500; // Adds a number of lines at a time
+		
+		rad = "";
+		String text1 = "";
+		String text2 = "";
+		int i = 0; // radräknare
+		int j = 0; // indexering
+		int u = 1; //udda
+		
+		// A. Översättningen på egen rad
+		// =============================
+		if (segStart)
 		{
-			// Läs språkparet ur TMX-filen
-			// ===========================
-			
-			//TMXlanguages(String tmxfil, String[] v)
-			String[] v = new String [2];
-			TMXlanguages(tmxfil, v);
-			
-			String lang1 = v[0];
-			String lang2 = v[1];
-			
-			String rad = "";
-			
-			// Opens TMX-file for reading
-			BufferedReader br0 = new BufferedReader(new InputStreamReader(new
-			FileInputStream(tmxfil), "UTF-8"));
-			
-			boolean segStart = true; // Raden börjar med meningen.
-			
-			// Läser några rader för att bestämma hur raderna med meningarna ser ut.
-			// =====================================================================
-			while ((rad = br0.readLine()) != null)
-			{
+			// Läser in meningarna på resp. språk
+			while ((rad = br1.readLine()) != null)
+			{	
 				rad = rad.trim();
 				
-				//Utskrift.skrivText("Index för text på raden: " + rad.indexOf("<seg>"));
+				//Utskrift.skrivText("Rad " + i + ": " + rad);
 				
-				// söker början på textraden
-				if (rad.indexOf("<seg>") == 0)
+				if (rad.startsWith("<seg>") && u == 1) // udda
 				{
-					segStart = true;
-					break;
+					j = rad.indexOf("</seg>");
+					
+					if(j > 0)
+					{
+						text1 = text1 + rad.substring(5, j) + "\n";
+					
+						u = 0; // jämn
+						
+						//Utskrift.skrivText(rad);
+						//Utskrift.skrivText(text1);
+					}
+					
+					else
+					{
+						text1 = text1 + rad.substring(5) + " ";
+
+						//Utskrift.skrivText(rad);
+						//Utskrift.skrivText(text1);				
+					}
+
 				}
 				
-				else if (rad.indexOf("<seg>") > 0)
+				else if (rad.startsWith("<seg>") && u == 0) // jämn
 				{
-					segStart = false;
-					break;
+					j = rad.indexOf("</seg>");
+
+					if(j > 0)
+					{			
+						text2 = text2 + rad.substring(5, j) + "\n";
+								
+						u = 1; // udda
+						
+						//Utskrift.skrivText(rad);
+						//Utskrift.skrivText(text2);
+					}
+					
+					else
+					{
+						text2 = text2 + rad.substring(5) + " ";
+												
+						//Utskrift.skrivText(rad);
+						//Utskrift.skrivText(text2);
+					}
 				}
+			
+				if ((i%chunkSize) == 0)
+				{
+					Utskrift.rubrik(messages.getString("chunk"));
+					Textfil.addText(utfil1, text1, "UTF-8"); // skriver urvalet
+					text1 = ""; // nollställ
+					Textfil.addText(utfil2, text2, "UTF-8"); // skriver urvalet
+					text2 = ""; // nollställ
+				}
+				
+				i++;
 			}
-			
-			br0.close(); // stänger filen
-			
-			//Utskrift.skrivText("Raden börjar med texten: " + segStart);
-			
-			Utskrift.skrivText(messages.getString("languages") + " " + lang1 + " " + messages.getString("and") + " " + lang2);
-			
-			// Läs sökvägen ur TMX-filnamn m sökväg.
-			String path = Textfil.readPath(tmxfil);
-			
-			//Utskrift.skrivText("Path: " + path);
-			
-			// Läs själva filnamnet på TMX-filen.
-			String filnamnet = Textfil.readFileName(tmxfil);
-			
-			//Utskrift.skrivText(messages.getString("tmxpres") + " " + filnamnet);
-			
-			// Ta bort ändelsen .tmx
-			String filstam = filnamnet.substring(0, filnamnet.length() - 4);
-			//Utskrift.skrivText(filstam);
-			
-			// Konstruera utfilerna.
-			
-			String utfil1 = path + filstam + "." + lang1;
-			String utfil2 = path + filstam + "." + lang2;
-			
-			//Utskrift.rubrik("Resultatfiler");
-			//Utskrift.skrivText(utfil1);
-			//Utskrift.skrivText(utfil2);
-			
-			Textfil.skrivText(utfil1, "", "UTF-8"); // rensning
-			Textfil.skrivText(utfil2, "", "UTF-8"); // rensning
-			
-			// Opens TMX-file for reading
-			BufferedReader br1 = new BufferedReader(new InputStreamReader(new
-			FileInputStream(tmxfil), "UTF-8"));
-			
-			int chunkSize = 500; // Adds a number of lines at a time
-			
-			rad = "";
-			String text1 = "";
-			String text2 = "";
-			int i = 0; // radräknare
-			int j = 0; // indexering
-			int u = 1; //udda
-			
-			// A. Översättningen på egen rad
-			// =============================
-			if (segStart)
-			{
-				// Läser in meningarna på resp. språk
-				while ((rad = br1.readLine()) != null)
-				{	
-					rad = rad.trim();
-					
-					//Utskrift.skrivText("Rad " + i + ": " + rad);
-					
-					if (rad.startsWith("<seg>") && u == 1) // udda
-					{
-						j = rad.indexOf("</seg>");
-						
-						if(j > 0)
-						{
-							text1 = text1 + rad.substring(5, j) + "\n";
-						
-							u = 0; // jämn
-							
-							//Utskrift.skrivText(rad);
-							//Utskrift.skrivText(text1);
-						}
-						
-						else
-						{
-							text1 = text1 + rad.substring(5) + " ";
 
-							//Utskrift.skrivText(rad);
-							//Utskrift.skrivText(text1);				
-						}
-
-					}
-					
-					else if (rad.startsWith("<seg>") && u == 0) // jämn
-					{
-						j = rad.indexOf("</seg>");
-
-						if(j > 0)
-						{			
-							text2 = text2 + rad.substring(5, j) + "\n";
-									
-							u = 1; // udda
-							
-							//Utskrift.skrivText(rad);
-							//Utskrift.skrivText(text2);
-						}
-						
-						else
-						{
-							text2 = text2 + rad.substring(5) + " ";
-													
-							//Utskrift.skrivText(rad);
-							//Utskrift.skrivText(text2);
-						}
-					}
-				
-					if ((i%chunkSize) == 0)
-					{
-						Utskrift.rubrik(messages.getString("chunk"));
+			br1.close(); // stänger filen
+			
+			// skriv ev. resterande rader till filerna.
 						Textfil.addText(utfil1, text1, "UTF-8"); // skriver urvalet
 						text1 = ""; // nollställ
 						Textfil.addText(utfil2, text2, "UTF-8"); // skriver urvalet
 						text2 = ""; // nollställ
-					}
-					
-					i++;
-				}
-
-				br1.close(); // stänger filen
-				
-				// skriv ev. resterande rader till filerna.
-							Textfil.addText(utfil1, text1, "UTF-8"); // skriver urvalet
-							text1 = ""; // nollställ
-							Textfil.addText(utfil2, text2, "UTF-8"); // skriver urvalet
-							text2 = ""; // nollställ
-			}
-			// B. Översättningen efter språk-koden eller något annat.
-			// ======================================================
-			else if (!segStart)
-			{
-				int k = 0; // index för <seg> dvs. början på textraden
-				
-				// Läser in meningarna på resp. språk
-				while ((rad = br1.readLine()) != null)
-				{	
-					rad = rad.trim();
-					
-					k = rad.indexOf("<seg>"); // början på textraden
-					
-					//Utskrift.skrivText("Rad " + i + ": " + rad);
-					
-					if (k>0 && u == 1) // udda
-					{
-						j = rad.indexOf("</seg>");
-						
-						if(j > 0)
-						{
-							text1 = text1 + rad.substring(k+5, j) + "\n";
-						
-							u = 0; // jämn
-							
-							//Utskrift.skrivText(rad);
-							//Utskrift.skrivText(text1);
-						}
-						
-						else
-						{
-							text1 = text1 + rad.substring(5) + " ";
-
-							//Utskrift.skrivText(rad);
-							//Utskrift.skrivText(text1);				
-						}
-
-					}
-					
-					else if (k>0 && u == 0) // jämn
-					{
-						j = rad.indexOf("</seg>");
-
-						if(j > 0)
-						{			
-							text2 = text2 + rad.substring(k+5, j) + "\n";
-									
-							u = 1; // udda
-							
-							//Utskrift.skrivText(rad);
-							//Utskrift.skrivText(text2);
-						}
-						
-						else
-						{
-							text2 = text2 + rad.substring(5) + " ";
-													
-							//Utskrift.skrivText(rad);
-							//Utskrift.skrivText(text2);
-						}
-					}
-				
-					if ((i%chunkSize) == 0)
-					{
-						Utskrift.rubrik(messages.getString("chunk"));
-						Textfil.addText(utfil1, text1, "UTF-8"); // skriver urvalet
-						text1 = ""; // nollställ
-						Textfil.addText(utfil2, text2, "UTF-8"); // skriver urvalet
-						text2 = ""; // nollställ
-					}
-					
-					
-					i++;
-				}
-
-				br1.close(); // stänger filen
-				
-				// skriv ev. resterande rader till filerna.
-							Textfil.addText(utfil1, text1, "UTF-8"); // skriver urvalet
-							text1 = ""; // nollställ
-							Textfil.addText(utfil2, text2, "UTF-8"); // skriver urvalet
-							text2 = ""; // nollställ
-			}
-			
-			if (path.length()>0)
-				{}
-			else
-				Utskrift.skrivText(messages.getString("currentcat"));
-			
-			Utskrift.skrivText(messages.getString("writtento"));
-			Utskrift.skrivText(utfil1);
-			Utskrift.skrivText(utfil2);
 		}
+		// B. Översättningen efter språk-koden eller något annat.
+		// ======================================================
+		else if (!segStart)
+		{
+			int k = 0; // index för <seg> dvs. början på textraden
+			
+			// Läser in meningarna på resp. språk
+			while ((rad = br1.readLine()) != null)
+			{	
+				rad = rad.trim();
+				
+				k = rad.indexOf("<seg>"); // början på textraden
+				
+				//Utskrift.skrivText("Rad " + i + ": " + rad);
+				
+				if (k>0 && u == 1) // udda
+				{
+					j = rad.indexOf("</seg>");
+					
+					if(j > 0)
+					{
+						text1 = text1 + rad.substring(k+5, j) + "\n";
+					
+						u = 0; // jämn
+						
+						//Utskrift.skrivText(rad);
+						//Utskrift.skrivText(text1);
+					}
+					
+					else
+					{
+						text1 = text1 + rad.substring(5) + " ";
+
+						//Utskrift.skrivText(rad);
+						//Utskrift.skrivText(text1);				
+					}
+
+				}
+				
+				else if (k>0 && u == 0) // jämn
+				{
+					j = rad.indexOf("</seg>");
+
+					if(j > 0)
+					{			
+						text2 = text2 + rad.substring(k+5, j) + "\n";
+								
+						u = 1; // udda
+						
+						//Utskrift.skrivText(rad);
+						//Utskrift.skrivText(text2);
+					}
+					
+					else
+					{
+						text2 = text2 + rad.substring(5) + " ";
+												
+						//Utskrift.skrivText(rad);
+						//Utskrift.skrivText(text2);
+					}
+				}
+			
+				if ((i%chunkSize) == 0)
+				{
+					Utskrift.rubrik(messages.getString("chunk"));
+					Textfil.addText(utfil1, text1, "UTF-8"); // skriver urvalet
+					text1 = ""; // nollställ
+					Textfil.addText(utfil2, text2, "UTF-8"); // skriver urvalet
+					text2 = ""; // nollställ
+				}
+				
+				
+				i++;
+			}
+
+			br1.close(); // stänger filen
+			
+			// skriv ev. resterande rader till filerna.
+						Textfil.addText(utfil1, text1, "UTF-8"); // skriver urvalet
+						text1 = ""; // nollställ
+						Textfil.addText(utfil2, text2, "UTF-8"); // skriver urvalet
+						text2 = ""; // nollställ
+		}
+		
+		if (path.length()>0)
+			{}
+		else
+			Utskrift.skrivText(messages.getString("currentcat"));
+		
+		Utskrift.skrivText(messages.getString("writtento"));
+		Utskrift.skrivText(utfil1);
+		Utskrift.skrivText(utfil2);
 	}
 	
 	// Read a TMX-file to get the languages
