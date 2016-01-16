@@ -131,6 +131,7 @@ class TMX2Moses
 		//System.exit(1);
 		
 		String filnamn = "";
+		//String katalog = tmxfil;
 		
 		// Loop för att beta av alla filer i katalogen
 		// -------------------------------------------
@@ -220,65 +221,15 @@ class TMX2Moses
 		{
 			// Läs språkparet ur TMX-filen
 			// ===========================
+			
+			//TMXlanguages(String tmxfil, String[] v)
+			String[] v = new String [2];
+			TMXlanguages(tmxfil, v);
+			
+			String lang1 = v[0];
+			String lang2 = v[1];
+			
 			String rad = "";
-			String lang1 = "";
-			String lang2 = "";
-			
-			int u = 1; //udda
-			
-			// Opens TMX-file for reading
-			BufferedReader br = new BufferedReader(new InputStreamReader(new
-			FileInputStream(tmxfil), "UTF-8"));
-			
-			// Läser några meningar på resp. språk för att bestämma språkpar.
-			// --------------------------------------------------------------
-			while ((rad = br.readLine()) != null)
-			{
-				rad = rad.trim();
-				//Utskrift.rubrik("Språk-läsning: " + u + " " + rad);
-				//Utskrift.skrivText("Börjar med <tuv lang= " + rad.startsWith("<tuv lang="));
-				//Utskrift.skrivText("Börjar med <tuv xml:lang= " + rad.startsWith("<tuv xml:lang="));
-				
-				if (rad.startsWith("<tuv lang=") && u == 1) // udda
-				{
-					//i = rad.indexOf("<tuv lang=");
-					lang1 = rad.substring(11, 13);
-					u = 0; // jämn
-					//Utskrift.skrivText("Udda rad: " + rad);
-					//Utskrift.skrivText(lang1);
-				}
-				
-				else if (rad.startsWith("<tuv lang=") && u == 0) // jämn
-				{
-					//i = rad.indexOf("<tuv lang=");
-					lang2 = rad.substring(11, 13);
-					u = 1; // udda
-					//Utskrift.skrivText("Jämn rad: " + rad);
-					//Utskrift.skrivText(lang2);
-				}
-				
-				else if (rad.startsWith("<tuv xml:lang=") && u == 1) // udda
-				{
-					//i = rad.indexOf("<tuv lang=");
-					lang1 = rad.substring(15, 17);
-					u = 0; // jämn
-					//Utskrift.skrivText("Udda rad: " + rad);
-					//Utskrift.skrivText(lang1);
-				}
-				
-				else if (rad.startsWith("<tuv xml:lang=") && u == 0) // jämn
-				{
-					//i = rad.indexOf("<tuv lang=");
-					lang2 = rad.substring(15, 17);
-					u = 1; // udda
-					//Utskrift.skrivText("Jämn rad: " + rad);
-					//Utskrift.skrivText(lang2);
-				}
-				
-				if (lang1.length() > 0 && lang2.length() > 0) break;
-			}
-			
-			br.close(); // stänger filen
 			
 			// Opens TMX-file for reading
 			BufferedReader br0 = new BufferedReader(new InputStreamReader(new
@@ -351,7 +302,7 @@ class TMX2Moses
 			String text2 = "";
 			int i = 0; // radräknare
 			int j = 0; // indexering
-			u = 1; //udda
+			int u = 1; //udda
 			
 			// A. Översättningen på egen rad
 			// =============================
@@ -524,5 +475,75 @@ class TMX2Moses
 			Utskrift.skrivText(utfil1);
 			Utskrift.skrivText(utfil2);
 		}
+	}
+	
+	// Read a TMX-file to get the languages
+	public static void TMXlanguages(String tmxfil, String[] v) throws Exception
+	{
+		// Läs språkparet ur TMX-filen
+		// ===========================
+		String rad = "";
+		String lang1 = "";
+		String lang2 = "";
+		
+		int u = 1; //udda
+		
+		// Opens TMX-file for reading
+		BufferedReader br = new BufferedReader(new InputStreamReader(new
+		FileInputStream(tmxfil), "UTF-8"));
+		
+		// Läser några meningar på resp. språk för att bestämma språkpar.
+		// --------------------------------------------------------------
+		while ((rad = br.readLine()) != null)
+		{
+			rad = rad.trim();
+			//Utskrift.rubrik("Språk-läsning: " + u + " " + rad);
+			//Utskrift.skrivText("Börjar med <tuv lang= " + rad.startsWith("<tuv lang="));
+			//Utskrift.skrivText("Börjar med <tuv xml:lang= " + rad.startsWith("<tuv xml:lang="));
+			
+			if (rad.startsWith("<tuv lang=") && u == 1) // udda
+			{
+				//i = rad.indexOf("<tuv lang=");
+				lang1 = rad.substring(11, 13);
+				v[0] = lang1;
+				u = 0; // jämn
+				//Utskrift.skrivText("Udda rad: " + rad);
+				//Utskrift.skrivText(lang1);
+			}
+			
+			else if (rad.startsWith("<tuv lang=") && u == 0) // jämn
+			{
+				//i = rad.indexOf("<tuv lang=");
+				lang2 = rad.substring(11, 13);
+				v[1] = lang2;
+				u = 1; // udda
+				//Utskrift.skrivText("Jämn rad: " + rad);
+				//Utskrift.skrivText(lang2);
+			}
+			
+			else if (rad.startsWith("<tuv xml:lang=") && u == 1) // udda
+			{
+				//i = rad.indexOf("<tuv lang=");
+				lang1 = rad.substring(15, 17);
+				v[0] = lang1;
+				u = 0; // jämn
+				//Utskrift.skrivText("Udda rad: " + rad);
+				//Utskrift.skrivText(lang1);
+			}
+			
+			else if (rad.startsWith("<tuv xml:lang=") && u == 0) // jämn
+			{
+				//i = rad.indexOf("<tuv lang=");
+				lang2 = rad.substring(15, 17);
+				v[1] = lang2;
+				u = 1; // udda
+				//Utskrift.skrivText("Jämn rad: " + rad);
+				//Utskrift.skrivText(lang2);
+			}
+			
+			if (lang1.length() > 0 && lang2.length() > 0) break;
+		}
+		
+		br.close(); // stänger filen
 	}
 }
