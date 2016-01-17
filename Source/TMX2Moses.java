@@ -45,7 +45,7 @@
 // -----------------------------------------------------------------------
 
 // TODO:
-
+// - log-file
 // 
 
 import java.util.*; // ArrayList, Scanner, Comparator, Random
@@ -115,7 +115,7 @@ class TMX2Moses
 	if (directory == true)
 	{
 		String cat = tmxfil;
-		tmxfil = "";
+		tmxfil = ""; // counter for tmx-files
 		
 		// Filerna i katalogen listas
 		// ==========================
@@ -131,6 +131,9 @@ class TMX2Moses
 		//System.exit(1);
 		
 		String filnamn = "";
+		int tmx = 0;
+		String lang1 = "";
+		String lang2 = "";
 		//String katalog = tmxfil;
 		
 		// Loop för att beta av alla filer i katalogen
@@ -144,16 +147,46 @@ class TMX2Moses
 				//boolean checkTMX(String tmxfil)
 				if (!checkTMX(filnamn))
 				{
+				
 					Utskrift.skrivText(messages.getString("notmx"));
 					continue;
 				}
 				
 				// Writes to bitext files
 				// ======================
+				tmx++; // Counts tmx-files
 				// Läs språkparet ur TMX-filen
 				// ===========================
 				String[] v = new String [2];
+				String lang3 = "";
+				String lang4 = "";
+				
 				TMXlanguages(filnamn, v);
+				
+				if (tmx>1)
+				{
+					lang3 = v[0];
+					lang4 = v[1];
+
+					if(!((lang1.equals(lang3) || lang1.equals(lang4)) && 
+								(lang2.equals(lang3) || lang2.equals(lang4))))
+					{
+						Utskrift.rubrik (messages.getString("langpair") + lang1 + "-" + lang2, '=');
+						Utskrift.skrivText(messages.getString("onemorelang"));
+						Utskrift.skrivText(messages.getString("thislangpair") + " " +
+							lang3 + "-" + lang4);
+						Utskrift.skrivText(messages.getString("skips"));
+						continue;
+					}
+				}
+				else
+				{
+					lang1 = v[0];
+					lang2 = v[1];
+					Utskrift.skrivText(messages.getString("langpair") + " " +
+							lang1 + "-" + lang2);
+				}
+				
 				//TMX2bitext(String tmxfil, String[] v, String language, String country)
 				TMX2bitext(filnamn, v, language, country);
 			}
@@ -176,7 +209,7 @@ class TMX2Moses
 			// ===========================
 			String[] v = new String [2];
 			TMXlanguages(tmxfil, v);
-			
+			//Utskrift.skrivText(messages.getString("langpair") + " " + v[0] + "-" + v[1]);
 			//TMX2bitext(String tmxfil, String[] v, String language, String country) 
 			TMX2bitext(tmxfil, v, language, country);
 		}
