@@ -141,8 +141,6 @@ class TMX2Moses
 		
 		String path = cat;
 		
-		//Utskrift.skrivText("Path: " + path);
-		
 		// Loop för att beta av alla filer i katalogen
 		// -------------------------------------------
 		for (int i=0; i < files.size(); i++)
@@ -201,7 +199,6 @@ class TMX2Moses
 					Utskrift.skrivText(messages.getString("tmxfileno") + " " + tmx);
 				}
 				
-				//TMX2bitext(String tmxfil, String[] v, String language, String country)
 				TMX2bitext(filnamn, path, v, directory, tmx, language, country);
 			}
 	}
@@ -228,11 +225,7 @@ class TMX2Moses
 			
 			// Läs sökvägen ur TMX-filnamn m sökväg.
 			String path = Textfil.readPath(tmxfil);
-			
-			//Utskrift.skrivText("TMX: " + tmxfil);
-			//Utskrift.skrivText("Path: " + path);
-			//Utskrift.skrivText(messages.getString("langpair") + " " + v[0] + "-" + v[1]);
-			//TMX2bitext(String tmxfil, String[] v, String language, String country) 
+		
 			TMX2bitext(tmxfil, path, v, directory, tmx, language, country);
 		}
 	}
@@ -297,10 +290,8 @@ class TMX2Moses
 
 		messages = ResourceBundle.getBundle("MessagesBundleTMX2Moses", currentLocale);
 		
-		// Läs språkparet ur TMX-filen
-		// ===========================
-		//String[] v = new String [2];
-		//TMXlanguages(tmxfil, v);
+		// Läs språkparet
+		// ==============
 		
 		String lang1 = v[0];
 		String lang2 = v[1];
@@ -318,8 +309,6 @@ class TMX2Moses
 		{
 			rad = rad.trim();
 			
-			//Utskrift.skrivText("Index för text på raden: " + rad.indexOf("<seg>"));
-			
 			// söker början på textraden
 			if (rad.indexOf("<seg>") == 0)
 			{
@@ -336,15 +325,7 @@ class TMX2Moses
 		
 		br0.close(); // stänger filen
 		
-		//Utskrift.skrivText("Raden börjar med texten: " + segStart);
-		
 		Utskrift.skrivText(messages.getString("languages") + " " + lang1 + " " + messages.getString("and") + " " + lang2);
-		
-		// Läs sökvägen ur TMX-filnamn m sökväg.
-		//String path = Textfil.readPath(tmxfil);
-		
-		//Utskrift.skrivText("TMX: " + tmxfil);
-		//Utskrift.skrivText("Path: " + path);
 		
 		String filnamnet = "";
 		String filstam = "";
@@ -354,8 +335,6 @@ class TMX2Moses
 		// The new files gets the same name as the folder
 		filstam = Textfil.readFolderName(path);
 		path = Textfil.readPath(path); // ..
-		//Utskrift.skrivText ("path: " + path);
-		//Utskrift.skrivText ("filstam: " + filstam);
 		}
 		
 		else
@@ -373,18 +352,11 @@ class TMX2Moses
 		String utfil1 = path + filstam + "." + lang1;
 		String utfil2 = path + filstam + "." + lang2;
 		
-		//Utskrift.rubrik("Resultatfiler");
-		//Utskrift.skrivText(utfil1);
-		//Utskrift.skrivText(utfil2);
-		
-		// N.B. If directory mode and output file exists, it will be appended.
-		// -------------------------------------------------------------------
 		if(tmx==1) // The first tmx-file
 		{
 			Textfil.skrivText(utfil1, "", "UTF-8"); // rensning
 			Textfil.skrivText(utfil2, "", "UTF-8"); // rensning
 		}
-
 		
 		// Opens TMX-file for reading
 		BufferedReader br1 = new BufferedReader(new InputStreamReader(new
@@ -419,17 +391,11 @@ class TMX2Moses
 						text1 = text1 + rad.substring(5, j) + "\n";
 					
 						u = 0; // jämn
-						
-						//Utskrift.skrivText(rad);
-						//Utskrift.skrivText(text1);
 					}
 					
 					else
 					{
 						text1 = text1 + rad.substring(5) + " ";
-
-						//Utskrift.skrivText(rad);
-						//Utskrift.skrivText(text1);				
 					}
 
 				}
@@ -443,17 +409,11 @@ class TMX2Moses
 						text2 = text2 + rad.substring(5, j) + "\n";
 								
 						u = 1; // udda
-						
-						//Utskrift.skrivText(rad);
-						//Utskrift.skrivText(text2);
 					}
 					
 					else
 					{
 						text2 = text2 + rad.substring(5) + " ";
-												
-						//Utskrift.skrivText(rad);
-						//Utskrift.skrivText(text2);
 					}
 				}
 			
@@ -490,8 +450,6 @@ class TMX2Moses
 				
 				k = rad.indexOf("<seg>"); // början på textraden
 				
-				//Utskrift.skrivText("Rad " + i + ": " + rad);
-				
 				if (k>0 && u == 1) // udda
 				{
 					j = rad.indexOf("</seg>");
@@ -501,17 +459,11 @@ class TMX2Moses
 						text1 = text1 + rad.substring(k+5, j) + "\n";
 					
 						u = 0; // jämn
-						
-						//Utskrift.skrivText(rad);
-						//Utskrift.skrivText(text1);
 					}
 					
 					else
 					{
 						text1 = text1 + rad.substring(5) + " ";
-
-						//Utskrift.skrivText(rad);
-						//Utskrift.skrivText(text1);				
 					}
 
 				}
@@ -525,17 +477,11 @@ class TMX2Moses
 						text2 = text2 + rad.substring(k+5, j) + "\n";
 								
 						u = 1; // udda
-						
-						//Utskrift.skrivText(rad);
-						//Utskrift.skrivText(text2);
 					}
 					
 					else
 					{
 						text2 = text2 + rad.substring(5) + " ";
-												
-						//Utskrift.skrivText(rad);
-						//Utskrift.skrivText(text2);
 					}
 				}
 			
@@ -547,7 +493,6 @@ class TMX2Moses
 					Textfil.addText(utfil2, text2, "UTF-8"); // skriver urvalet
 					text2 = ""; // nollställ
 				}
-				
 				
 				i++;
 			}
@@ -591,48 +536,33 @@ class TMX2Moses
 		while ((rad = br.readLine()) != null)
 		{
 			rad = rad.trim();
-			//Utskrift.rubrik("Språk-läsning: " + u + " " + rad);
-			//Utskrift.skrivText("Börjar med <tuv lang= " + rad.startsWith("<tuv lang="));
-			//Utskrift.skrivText("Börjar med <tuv xml:lang= " + rad.startsWith("<tuv xml:lang="));
 			
 			if (rad.startsWith("<tuv lang=") && u == 1) // udda
 			{
-				//i = rad.indexOf("<tuv lang=");
 				lang1 = rad.substring(11, 13);
 				v[0] = lang1;
 				u = 0; // jämn
-				//Utskrift.skrivText("Udda rad: " + rad);
-				//Utskrift.skrivText(lang1);
 			}
 			
 			else if (rad.startsWith("<tuv lang=") && u == 0) // jämn
 			{
-				//i = rad.indexOf("<tuv lang=");
 				lang2 = rad.substring(11, 13);
 				v[1] = lang2;
 				u = 1; // udda
-				//Utskrift.skrivText("Jämn rad: " + rad);
-				//Utskrift.skrivText(lang2);
 			}
 			
 			else if (rad.startsWith("<tuv xml:lang=") && u == 1) // udda
 			{
-				//i = rad.indexOf("<tuv lang=");
 				lang1 = rad.substring(15, 17);
 				v[0] = lang1;
 				u = 0; // jämn
-				//Utskrift.skrivText("Udda rad: " + rad);
-				//Utskrift.skrivText(lang1);
 			}
 			
 			else if (rad.startsWith("<tuv xml:lang=") && u == 0) // jämn
 			{
-				//i = rad.indexOf("<tuv lang=");
 				lang2 = rad.substring(15, 17);
 				v[1] = lang2;
 				u = 1; // udda
-				//Utskrift.skrivText("Jämn rad: " + rad);
-				//Utskrift.skrivText(lang2);
 			}
 			
 			if (lang1.length() > 0 && lang2.length() > 0) break;
