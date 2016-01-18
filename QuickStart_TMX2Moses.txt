@@ -5,6 +5,7 @@ Description
 -----------
 
 The program takes a TMX-file created with OmegaT and makes two bi-text files, suitable for Moses training. Just enter the name of your TMX-file (with full path) when the program waits for input. Hit <ENTER> and wait for the bi-text files to be created.
+If you enter a folder name instead, all TMX-files in the folder will be used for creating the bi-text files.
 
 Notes
 -----
