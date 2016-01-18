@@ -94,6 +94,8 @@ class TMX2Moses
 	while (tmxfil.length()==0 || (file==false && directory==false))
 		{
 		Utskrift.rubrik(messages.getString("writepath"));
+		Utskrift.skrivText(messages.getString("processpath"));
+		System.out.println();
 		tmxfil = Inmatning.rad(messages.getString("tmx"));
 		file=Textfil.exists(tmxfil);
 		if(file==false)
