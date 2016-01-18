@@ -114,6 +114,8 @@ class TMX2Moses
 			}
 		}
 		
+		int tmx = 0; // counter for tmx-files
+		
 	if (directory == true)
 	{
 		String cat = tmxfil;
@@ -133,7 +135,6 @@ class TMX2Moses
 		//System.exit(1);
 		
 		String filnamn = "";
-		int tmx = 0;
 		String lang1 = "";
 		String lang2 = "";
 		//String katalog = tmxfil;
@@ -160,7 +161,9 @@ class TMX2Moses
 				
 				// Writes to bitext files
 				// ======================
+				
 				tmx++; // Counts tmx-files
+				
 				// Läs språkparet ur TMX-filen
 				// ===========================
 				String[] v = new String [2];
@@ -199,7 +202,7 @@ class TMX2Moses
 				}
 				
 				//TMX2bitext(String tmxfil, String[] v, String language, String country)
-				TMX2bitext(filnamn, path, v, directory, language, country);
+				TMX2bitext(filnamn, path, v, directory, tmx, language, country);
 			}
 	}
 	
@@ -216,6 +219,8 @@ class TMX2Moses
 		// ======================
 		else
 		{
+			tmx++; // Counts tmx-files
+			
 			// Läs språkparet ur TMX-filen
 			// ===========================
 			String[] v = new String [2];
@@ -228,7 +233,7 @@ class TMX2Moses
 			//Utskrift.skrivText("Path: " + path);
 			//Utskrift.skrivText(messages.getString("langpair") + " " + v[0] + "-" + v[1]);
 			//TMX2bitext(String tmxfil, String[] v, String language, String country) 
-			TMX2bitext(tmxfil, path, v, directory, language, country);
+			TMX2bitext(tmxfil, path, v, directory, tmx, language, country);
 		}
 	}
 	
@@ -282,7 +287,7 @@ class TMX2Moses
 	}
 	
 	// Read a TMX-file and write to bitext files.
-	public static void TMX2bitext(String tmxfil, String path, String[] v, boolean directory, String language, String country) throws Exception
+	public static void TMX2bitext(String tmxfil, String path, String[] v, boolean directory, int tmx, String language, String country) throws Exception
 	{
 	
 		Locale currentLocale;
@@ -374,7 +379,7 @@ class TMX2Moses
 		
 		// N.B. If directory mode and output file exists, it will be appended.
 		// -------------------------------------------------------------------
-		if(!directory)
+		if(tmx==1) // The first tmx-file
 		{
 			Textfil.skrivText(utfil1, "", "UTF-8"); // rensning
 			Textfil.skrivText(utfil2, "", "UTF-8"); // rensning
