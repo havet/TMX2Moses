@@ -6,7 +6,7 @@
 // och med rätt tecken (å, ä, ö).
 // ====================================== 
 
-// Version: 0.98
+// Version: 0.99
 
 //      Copyright (c) 2012-2013 Per Tunedal, Stockholm, Sweden
 //       Author: Per Tunedal <info@tunedal.nu>
@@ -38,6 +38,7 @@
 
 // v. 0.1 Comments etc mainly in Swedish.
 // v. 0.98 Added line counting
+// v. 0.99 Added folder name
 // --------------------------------------
 
 package per.edu;
@@ -1127,6 +1128,15 @@ public static void addText (String filnamn, String text, String encoding) throws
 		int i = filnamn.lastIndexOf("\\");
 		if (i>=0) path = filnamn.substring(0, i+1);
 		return path;
+	}
+	
+	// Läser katalognamnet från en fullständig sökväg
+	public static String readFolderName (String path)	
+	{
+		String folder = "";
+		int i = path.lastIndexOf("\\");
+		if (i>=0) folder = path.substring(i+1, path.length());
+		return folder;
 	}
 	
 	// Läser enbart filnamnet från ett filnamn med fullständig sökväg
