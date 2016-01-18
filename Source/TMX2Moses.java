@@ -136,6 +136,10 @@ class TMX2Moses
 		String lang2 = "";
 		//String katalog = tmxfil;
 		
+		String path = cat;
+		
+		//Utskrift.skrivText("Path: " + path);
+		
 		// Loop för att beta av alla filer i katalogen
 		// -------------------------------------------
 		for (int i=0; i < files.size(); i++)
@@ -188,7 +192,7 @@ class TMX2Moses
 				}
 				
 				//TMX2bitext(String tmxfil, String[] v, String language, String country)
-				TMX2bitext(filnamn, v, language, country);
+				TMX2bitext(filnamn, path, v, directory, language, country);
 			}
 	}
 	
@@ -209,9 +213,15 @@ class TMX2Moses
 			// ===========================
 			String[] v = new String [2];
 			TMXlanguages(tmxfil, v);
+			
+			// Läs sökvägen ur TMX-filnamn m sökväg.
+			String path = Textfil.readPath(tmxfil);
+			
+			//Utskrift.skrivText("TMX: " + tmxfil);
+			//Utskrift.skrivText("Path: " + path);
 			//Utskrift.skrivText(messages.getString("langpair") + " " + v[0] + "-" + v[1]);
 			//TMX2bitext(String tmxfil, String[] v, String language, String country) 
-			TMX2bitext(tmxfil, v, language, country);
+			TMX2bitext(tmxfil, path, v, directory, language, country);
 		}
 	}
 	
@@ -265,7 +275,7 @@ class TMX2Moses
 	}
 	
 	// Read a TMX-file and write to bitext files.
-	public static void TMX2bitext(String tmxfil, String[] v, String language, String country) throws Exception
+	public static void TMX2bitext(String tmxfil, String path, String[] v, boolean directory, String language, String country) throws Exception
 	{
 	
 		Locale currentLocale;
@@ -319,18 +329,32 @@ class TMX2Moses
 		Utskrift.skrivText(messages.getString("languages") + " " + lang1 + " " + messages.getString("and") + " " + lang2);
 		
 		// Läs sökvägen ur TMX-filnamn m sökväg.
-		String path = Textfil.readPath(tmxfil);
+		//String path = Textfil.readPath(tmxfil);
 		
+		//Utskrift.skrivText("TMX: " + tmxfil);
 		//Utskrift.skrivText("Path: " + path);
 		
-		// Läs själva filnamnet på TMX-filen.
-		String filnamnet = Textfil.readFileName(tmxfil);
+		String filnamnet = "";
+		String filstam = "";
 		
-		//Utskrift.skrivText(messages.getString("tmxpres") + " " + filnamnet);
+		if (directory)
+		{
+		// The new files gets the same name as the folder
+		filstam = Textfil.readFolderName(path);
+		path = Textfil.readPath(path); // ..
+		//Utskrift.skrivText ("path: " + path);
+		//Utskrift.skrivText ("filstam: " + filstam);
+		}
+		
+		else
+		{	
+		// Läs själva filnamnet på TMX-filen.
+		filnamnet = Textfil.readFileName(tmxfil);
 		
 		// Ta bort ändelsen .tmx
-		String filstam = filnamnet.substring(0, filnamnet.length() - 4);
+		filstam = filnamnet.substring(0, filnamnet.length() - 4);
 		//Utskrift.skrivText(filstam);
+		}
 		
 		// Konstruera utfilerna.
 		
@@ -341,8 +365,14 @@ class TMX2Moses
 		//Utskrift.skrivText(utfil1);
 		//Utskrift.skrivText(utfil2);
 		
-		Textfil.skrivText(utfil1, "", "UTF-8"); // rensning
-		Textfil.skrivText(utfil2, "", "UTF-8"); // rensning
+		// N.B. If directory mode and output file exists, it will be appended.
+		// -------------------------------------------------------------------
+		if(!directory)
+		{
+			Textfil.skrivText(utfil1, "", "UTF-8"); // rensning
+			Textfil.skrivText(utfil2, "", "UTF-8"); // rensning
+		}
+
 		
 		// Opens TMX-file for reading
 		BufferedReader br1 = new BufferedReader(new InputStreamReader(new
