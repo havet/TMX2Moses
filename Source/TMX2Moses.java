@@ -148,7 +148,7 @@ class TMX2Moses
 			{
 				filnamn = files.get(i);
 				System.out.println();
-				Utskrift.skrivText(i + ": " + filnamn);
+				Utskrift.skrivText((i+1) + ": " + filnamn);
 				// Kolla att det är en TMX-fil
 				//boolean checkTMX(String tmxfil)
 				if (!checkTMX(filnamn))
@@ -181,16 +181,21 @@ class TMX2Moses
 						Utskrift.skrivText(messages.getString("onemorelang"));
 						Utskrift.skrivText(messages.getString("thislangpair") + " " +
 							lang3 + "-" + lang4);
+						Utskrift.skrivText(messages.getString("tmxfileno") + " " + tmx);
 						Utskrift.skrivText(messages.getString("skips"));
 						continue;
 					}
+					
+					else Utskrift.skrivText(messages.getString("tmxfileno") + " " + tmx);
 				}
 				else
 				{
 					lang1 = v[0];
 					lang2 = v[1];
-					Utskrift.skrivText(messages.getString("langpair") + " " +
-							lang1 + "-" + lang2);
+					Utskrift.rubrik(messages.getString("langpair") + " " +
+							lang1 + "-" + lang2, '=');
+					Utskrift.rubrik(messages.getString("only"));
+					Utskrift.skrivText(messages.getString("tmxfileno") + " " + tmx);
 				}
 				
 				//TMX2bitext(String tmxfil, String[] v, String language, String country)
