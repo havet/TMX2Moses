@@ -5,3 +5,5 @@ Thus TMX2Moses makes it possible to train your machine translation system on a c
 The software has been tested mainly on TMX-files created with OmegaT, but it works with TMX-files created with other CAT-tools (Computer Aided Translation) as well.
 
 Please read the QuickStart if you would like to test the program. You can test on the TMX-file example_en-sv-omegat.tmx (a translation to Swedish of a Wikipedia article on translation) or your own TMX-file. If you enter the name of a folder all TMX-files in the folder will be processed.
+
+Contributions are welcome. Just make a fork, make a pull request and I will merge as soon as possible.
